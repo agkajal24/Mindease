@@ -3,12 +3,24 @@ import { createContext, useEffect, useState } from "react";
 export const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
+  // ✅ SAFE moods
   const [moods, setMoods] = useState(() => {
-    return JSON.parse(localStorage.getItem("moods")) || [];
+    try {
+      const data = JSON.parse(localStorage.getItem("moods"));
+      return Array.isArray(data) ? data : [];
+    } catch {
+      return [];
+    }
   });
 
+  // ✅ SAFE habits
   const [habits, setHabits] = useState(() => {
-    return JSON.parse(localStorage.getItem("habits")) || [];
+    try {
+      const data = JSON.parse(localStorage.getItem("habits"));
+      return Array.isArray(data) ? data : [];
+    } catch {
+      return [];
+    }
   });
 
   useEffect(() => {
@@ -19,7 +31,6 @@ const AppProvider = ({ children }) => {
     localStorage.setItem("habits", JSON.stringify(habits));
   }, [habits]);
 
-  // ✅ DEFINE RESET HERE
   const resetAllData = () => {
     setMoods([]);
     setHabits([]);

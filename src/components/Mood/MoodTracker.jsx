@@ -9,10 +9,8 @@ const moodsList = [
 ];
 
 const MoodTracker = () => {
-  // ✅ CONTEXT STATE
   const { moods, setMoods } = useContext(AppContext);
 
-  // ✅ LOCAL UI STATE
   const [selectedMood, setSelectedMood] = useState(null);
   const [intensity, setIntensity] = useState(3);
   const [note, setNote] = useState("");
@@ -30,8 +28,8 @@ const MoodTracker = () => {
       date: new Date().toLocaleString(),
     };
 
-    // ❗ entries ❌  → moods ✅
-    setMoods([newEntry, ...moods]);
+    // ✅ SAFE SPREAD
+    setMoods([newEntry, ...(moods || [])]);
 
     setSelectedMood(null);
     setIntensity(3);
@@ -44,7 +42,6 @@ const MoodTracker = () => {
         How are you feeling today?
       </h2>
 
-      {/* Mood buttons */}
       <div className="flex justify-around text-3xl mb-2">
         {moodsList.map((m) => (
           <button
@@ -61,7 +58,6 @@ const MoodTracker = () => {
         ))}
       </div>
 
-      {/* Intensity */}
       <div className="mb-2">
         <label>
           Intensity: <strong>{intensity}</strong>
@@ -76,7 +72,6 @@ const MoodTracker = () => {
         />
       </div>
 
-      {/* Note */}
       <textarea
         value={note}
         onChange={(e) => setNote(e.target.value)}
@@ -91,10 +86,10 @@ const MoodTracker = () => {
         Save Mood
       </button>
 
-      {/* ✅ USE moods NOT entries */}
-      {moods.length > 0 && (
+      {/* ✅ SAFE RENDER */}
+      {(moods || []).length > 0 && (
         <div className="mt-4 space-y-2 max-h-30 overflow-y-auto">
-          {moods.map((e, i) => (
+          {(moods || []).map((e, i) => (
             <div key={i} className="bg-black/40 p-2 rounded text-sm">
               <strong>{e.mood}</strong> | Intensity {e.intensity}
               <div className="opacity-70">{e.date}</div>
